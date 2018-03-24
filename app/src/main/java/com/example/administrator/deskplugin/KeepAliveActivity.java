@@ -45,11 +45,11 @@ public class KeepAliveActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(! SystemUtils.isAPPALive(this,getPackageName())){
+        Log.d("DeskPlugin", "进程" + SystemUtils.isAPPALive(this, getPackageName()));
+        if (!SystemUtils.isAPPALive(this, getPackageName())) {
             Intent intentAlive = new Intent(this, MainActivity.class);
             intentAlive.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intentAlive);

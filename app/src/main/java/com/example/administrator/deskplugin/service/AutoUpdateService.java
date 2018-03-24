@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -37,9 +38,6 @@ public class AutoUpdateService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             upTime();
-            if (intent.getAction().equals(Intent.ACTION_TIME_TICK)) {
-                context.startService(new Intent(context, AutoUpdateService.class));
-            }
         }
     };
 
@@ -50,6 +48,7 @@ public class AutoUpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d("DeskPlugin", "========>onStartCommand");
         upTime();
         registerReceiver();
         return START_STICKY;

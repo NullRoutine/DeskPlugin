@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 /**
  * 桌面插件
@@ -54,6 +55,7 @@ public class DeskWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
+        Log.d("DeskPlugin", "======>>" + intent.getAction() + ">>>>" + context.getPackageName());
         Intent intent2 = new Intent(context, AutoUpdateService.class);
         context.getApplicationContext().startService(intent2);
     }
