@@ -15,7 +15,6 @@ import android.widget.RemoteViews;
 
 import com.example.administrator.deskplugin.R;
 import com.example.administrator.deskplugin.util.Lunar;
-import com.example.administrator.deskplugin.util.ScreenManager;
 import com.example.administrator.deskplugin.util.TimeUtil;
 
 import java.text.SimpleDateFormat;
@@ -53,20 +52,6 @@ public class AutoUpdateService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         upTime();
         registerReceiver();
-        final ScreenManager screenManager = ScreenManager.getInstance(this);
-        DeskWidgetListener deskWidgetListener = new DeskWidgetListener(this);
-        deskWidgetListener.setScreenListener(new DeskWidgetListener.ScreenListener() {
-            @Override
-            public void screenOn() {
-                screenManager.finishActivity();
-            }
-
-            @Override
-            public void screenOff() {
-                screenManager.startActivity();
-
-            }
-        });
         return START_STICKY;
     }
 

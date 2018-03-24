@@ -1,10 +1,8 @@
 package com.example.administrator.deskplugin;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,8 +10,8 @@ import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.example.administrator.deskplugin.service.AutoUpdateService;
 import com.example.administrator.deskplugin.util.ScreenManager;
+import com.example.administrator.deskplugin.util.SystemUtils;
 
 /**
  * 一像素保活页面
@@ -38,56 +36,23 @@ public class KeepAliveActivity extends AppCompatActivity {
         params.width = 1;
         window.setAttributes(params);
         Log.e("DeskPlugin", "=======>");
-        Intent intent = new Intent(this, AutoUpdateService.class);
-        startService(intent);
         ScreenManager.getInstance(this).setActivity(this);
-        checkScreen();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        checkScreen();
     }
 
-    /**
-     * 开启
-     */
-    public static void launch(Context context) {
-        Intent intent = new Intent(context, KeepAliveActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-    }
 
-    /**
-     * 关闭保活页面
-     */
-    public static void kill(Context context) {
-        if (keepAliveActivity != null) {
-            keepAliveActivity.finish();
-            Intent intent = new Intent(context, AutoUpdateService.class);
-            context.startService(intent);
-        }
-    }
-
-    /**
-     * 检查屏幕状态  isScreenOn为true  屏幕“亮”结束该Activity
-     */
-    private void checkScreen() {
-        PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
-        assert pm != null;
-        boolean isScreenOn = pm.isScreenOn();
-        if (isScreenOn) {
-            finish();
-            Intent intent = new Intent(this, AutoUpdateService.class);
-            startService(intent);
-        }
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Intent intent = new Intent(this, AutoUpdateService.class);
-        startService(intent);
+        if(! SystemUtils.isAPPALive(this,getPackageName())){
+            Intent intentAlive = new Intent(this, MainActivity.class);
+            intentAlive.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intentAlive);
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.example.administrator.deskplugin.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 
 import com.example.administrator.deskplugin.KeepAliveActivity;
 
@@ -32,7 +33,9 @@ public class ScreenManager {
     }
 
     public void startActivity() {
-        KeepAliveActivity.launch(mContext);
+        Intent intent = new Intent(mContext, KeepAliveActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(intent);
     }
 
     public void finishActivity() { //结束掉LiveActivity

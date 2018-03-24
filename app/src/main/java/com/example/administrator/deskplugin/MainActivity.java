@@ -1,6 +1,5 @@
 package com.example.administrator.deskplugin;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,9 +9,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.administrator.deskplugin.service.AutoUpdateService;
+import com.example.administrator.deskplugin.service.DeskWidgetListener;
+import com.example.administrator.deskplugin.util.ScreenManager;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DeskWidgetListener.ScreenListener {
+
+    // 动态注册锁屏等广播
+    private DeskWidgetListener mDeskWidgetListener;
+    // 1像素Activity管理类
+    private ScreenManager mScreenManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +33,9 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        Intent intent = new Intent(this, AutoUpdateService.class);
-        startService(intent);
+        mScreenManager = ScreenManager.getInstance(this);
+        mDeskWidgetListener = new DeskWidgetListener(this);
+        mDeskWidgetListener.setScreenListener(this);
     }
 
     @Override
@@ -57,5 +63,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mDeskWidgetListener.stopScreenReceiverListener();
+    }
+
+    @Override
+    public void screenOn() {
+        mScreenManager.finishActivity();
+    }
+
+    @Override
+    public void screenOff() {
+        mScreenManager.startActivity();
+    }
+
+    @Override
+    public void userPresent() {
+
     }
 }

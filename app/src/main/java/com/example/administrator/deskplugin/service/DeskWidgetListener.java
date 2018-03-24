@@ -16,11 +16,7 @@ public class DeskWidgetListener {
 
     public DeskWidgetListener(Context context) {
         this.context = context;
-        deskWidgetReceiver = new DeskWidgetReceiver();
-    }
-
-    public void setDeskWidgetReceiver(DeskWidgetReceiver deskWidgetReceiver) {
-        this.deskWidgetReceiver = deskWidgetReceiver;
+        this.deskWidgetReceiver = new DeskWidgetReceiver();
     }
 
     public void setScreenListener(ScreenListener screenListener) {
@@ -32,22 +28,33 @@ public class DeskWidgetListener {
         context.registerReceiver(deskWidgetReceiver, intentFilter);
     }
 
+    public void stopScreenReceiverListener() {
+        context.unregisterReceiver(deskWidgetReceiver);
+    }
+
     public interface ScreenListener {
         void screenOn();
 
         void screenOff();
+
+        void userPresent();
     }
 
     class DeskWidgetReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (screenListener != null) {
-                if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
-                    screenListener.screenOff();
-                } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-                    screenListener.screenOn();
-                }
+            String action = intent.getAction();
+            if (screenListener == null) {
+                return;
             }
+            if (Intent.ACTION_SCREEN_OFF.equals(action)) {//锁屏
+                screenListener.screenOff();
+            } else if (Intent.ACTION_SCREEN_ON.equals(action)) {//开屏
+                screenListener.screenOn();
+            } else if (Intent.ACTION_USER_PRESENT.equals(action)) {//解锁
+                screenListener.userPresent();
+            }
+
         }
     }
 
