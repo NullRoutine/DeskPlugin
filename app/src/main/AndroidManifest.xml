@@ -41,9 +41,19 @@
                 <action android:name="ELITOR_CLOCK" />
             </intent-filter>
         </receiver>
+
         <service
             android:name=".service.AutoUpdateService"
             android:priority="1000" />
+        <service
+            android:name=".service.BookService"
+            android:process=":remote">
+            <intent-filter>
+                <action android:name="com.example.administrator.deskplugin.client" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </service>
     </application>
 
 </manifest>
